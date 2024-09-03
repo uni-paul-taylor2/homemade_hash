@@ -23,14 +23,17 @@
     return chars;
   }
   
+  function aine(val,num){
+    //add if not empty
+    return val>0? val+num: val;
+  }
   function byte_digest(bytes){
     let n=0, i=0;
     for(i;i<bytes.length;i++) n+=bytes[i];
     while(n>255){
-      t=0;
       n=
-        +((n>>>0)&255) + ((n>>>8)&255)
-        +((n>>>16)&255) + ((n>>>24)&255);
+        +aine((n>>>0)&255,1) + aine((n>>>8)&255,2)
+        +aine((n>>>16)&255,3) + aine((n>>>24)&255,4);
     }
     return ab_map[n];
   }
@@ -77,7 +80,8 @@
     return arr2;
   }
   function homemade_hash(text){
-    text ||= '\x00'
+    text ||= '\x00\x00'
+    while(text.length<2) text+='\x00';
     if(text.length>MAX_CHARS)
       throw new RangeError("text length is too long"); 
     let arr=prepare(text), str="";
@@ -86,7 +90,7 @@
       str += shiftLeftAll(arr);
       str += shiftRight(arr);
       str += shiftRightAll(arr);
-      arr = prepare(u82str(arr));
+      //arr = prepare(u82str(arr));
     }
     return str
   }
