@@ -13,11 +13,13 @@
       mers_set[i][j] = mers.genrand_int32();
   }
   function str2u8(str){
+    if(typeof str!=="string") return str;
     const u=new Uint8Array(str.length);
     for(let i=0;i<str.length;i++) u[i]=str_map[str[i]];
     return u;
   }
   function u82str(u){
+    if(typeof u==="string") return u;
     let chars="";
     for(let i=0;i<u.length;i++) chars+=ab_map[u[i]];
     return chars;
@@ -71,7 +73,7 @@
     return byte_digest(bytes);
   }
   function prepare(text){
-    const arr1=str2u8(text), arr2=str2u8(text)
+    const arr1=str2u8(text), arr2=arr1.slice(0)
     const mers=mers_set[ str_map[byte_digest(arr1)] ];
     for(let i=0;i<arr1.length;i++)  arr2[i] = mers[i%mers.length]^arr1[i];
     return arr2;
@@ -86,7 +88,7 @@
       str += shiftLeftAll(arr);
       str += shiftRight(arr);
       str += shiftRightAll(arr);
-      arr = prepare(u82str(arr));
+      arr = prepare(arr);
     }
     return str
   }
